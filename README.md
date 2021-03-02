@@ -1,19 +1,10 @@
-# Home-Assistant Custom Components
-
-My first iteration of some custom components for home-assistant. (http://www.home-assistant.io)
-
-Component Overview
-------------------
-  * [pfSense Rule Switch](#pfsense_rule)
-  
-  
 ## pfSense Rule Switch Component
 
 This component is written to toggle pfSense firewall rules on (enabled) or off (disabled).  One my question why in the world would someone want to do this from HA. Simply put, I have children that from time to time refuse to clean their rooms and require further motivation on the fly vs on a strict schedule.  However, I'm sure someone else might find a better use case other than messy kids.
 
 ### Pre-Reqs
 
-- pfSense 2.3.x or 2.4.x
+- pfSense 2.4.x or 2.5.x
 - FauxAPI 1.3+ installed
   https://github.com/ndejong/pfsense_fauxapi#installation
 - FauxAPI API Key and Secret with appropriate permissions

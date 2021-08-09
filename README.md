@@ -97,8 +97,8 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 [black-shield]: https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge
 [buymecoffee]: https://www.buymeacoffee.com/14roiron
 [buymecoffeebadge]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=for-the-badge
-[commits-shield]: https://img.shields.io/github/commit-activity/y/14roiron/opnsense-ruleswitch.svg?style=for-the-badge
-[commits]: https://github.com/14roiron/opnsense-ruleswitch/commits/main
+[commits-shield]: https://img.shields.io/github/commit-activity/y/14roiron/home-assistant-custom-components-opnsense-ruleswitch.svg?style=for-the-badge
+[commits]: https://github.com/14roiron/home-assistant-custom-components-opnsense-ruleswitch/commits/main
 [hacs]: https://hacs.xyz
 [hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
 [discord]: https://discord.gg/Qa5fW2R
@@ -106,10 +106,10 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 [exampleimg]: example.png
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
 [forum]: https://community.home-assistant.io/
-[license-shield]: https://img.shields.io/github/license/14roiron/opnsense-ruleswitch.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/14roiron/home-assistant-custom-components-opnsense-ruleswitch.svg?style=for-the-badge
 [maintenance-shield]: https://img.shields.io/badge/maintainer-%4014roiron-blue.svg?style=for-the-badge
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [pre-commit-shield]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/14roiron/opnsense-ruleswitch.svg?style=for-the-badge
-[releases]: https://github.com/14roiron/opnsense-ruleswitch/releases
+[releases-shield]: https://img.shields.io/github/release/14roiron/home-assistant-custom-components-opnsense-ruleswitch.svg?style=for-the-badge
+[releases]: https://github.com/14roiron/home-assistant-custom-components-opnsense-ruleswitch/releases
 [user_profile]: https://github.com/14roiron

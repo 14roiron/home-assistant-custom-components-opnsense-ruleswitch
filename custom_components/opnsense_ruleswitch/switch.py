@@ -87,7 +87,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         i = 0
         for rule in filters['rows']:
             tracker = rule.get('uuid')
-            if tracker == None:
+            if tracker is None:
                 _LOGGER.warning("Skipping rule (no tracker_id): " + rule['description'])
             else:
                 if rule_prefix:
@@ -103,7 +103,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
         # Add devices
         add_entities(rules)
-    except Exception:
+    except Exception as e:
         _LOGGER.error("Problem getting rule set from opnSense host: %s.  Likely due to API key or secret. More Info:" + str(e), host)
 
 class opnSense(SwitchDevice):

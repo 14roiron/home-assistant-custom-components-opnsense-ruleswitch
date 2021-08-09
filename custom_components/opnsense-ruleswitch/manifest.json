@@ -1,9 +1,11 @@
 {
-"domain": "opnsense_rule",
-"name": "opnsense_rule switch",
-"version": "v0.10",
-"documentation": "https://github.com/14roiron/home-assistant-custom-components-opnsense-ruleswitch",
-"dependencies": [],
-"codeowners": [],
-"requirements": ["pyopnsense==0.3.0"]
-}
+    "domain": "opnsense_ruleswitch",
+    "name": "opnsense ruleswitch",
+    "documentation": "https://github.com/14roiron/opnsense-ruleswitch",
+    "issue_tracker": "https://github.com/14roiron/opnsense-ruleswitch/issues",
+    "dependencies": [],
+    "config_flow": true,
+    "codeowners": ["@14roiron"],
+    "requirements": []
+  }
+  

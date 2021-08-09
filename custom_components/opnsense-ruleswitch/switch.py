@@ -42,7 +42,7 @@ DOMAIN = "switch"
 DEFAULT_ICON_ENABLED = 'mdi:check-network-outline'
 DEFAULT_ICON_DISABLED = 'mdi:close-network-outline'
 
-REQUIREMENTS = ['pfsense-fauxapi==20190317.1']
+REQUIREMENTS = ['pyopnsense==0.0.3']
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -60,9 +60,9 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 def setup_platform(hass, config, add_entities, discovery_info=None):
     """Initialize the platform"""
 
-    """Setup the pfSense Rules platform."""
+    """Setup the opnSense Rules platform."""
     import pprint, sys
-    from PfsenseFauxapi.PfsenseFauxapi import PfsenseFauxapi
+    from pyopnsense import client
 
     # Assign configuration variables. The configuration check takes care they are
     # present.
@@ -71,15 +71,15 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     access_token = config.get(CONF_ACCESS_TOKEN)
     rule_prefix = config.get(CONF_RULE_FILTER)
 
-    _LOGGER.debug("Connecting to pfSense firewall to collect rules to add as switches.")
+    _LOGGER.debug("Connecting to opnSense firewall to collect rules to add as switches.")
 
     try:
-        FauxapiLib = PfsenseFauxapi(host, api_key, access_token, debug=True)
+        
+        apiLib = client.OPNClient(api_key, access_token,host)
 
-        # Get the current set of filters
-        filters = FauxapiLib.config_get('filter')
+        filters = apiLib._get('firewall/filter/searchRule')
 
-        _LOGGER.debug("Found %s rules in pfSense", len(filters['rule']))
+        _LOGGER.debug("Found %s rules in opnSense automation tab", (filters['total']))
 
         if rule_prefix:
             _LOGGER.debug("Filter for rules starting with %s being applied", rule_prefix)
@@ -87,33 +87,33 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         rules = []
         # Iterate through and find rules
         i = 0
-        for rule in filters['rule']:
-            tracker = rule.get('tracker')
+        for rule in filters['rows']:
+            tracker = rule.get('uuid')
             if tracker == None:
-                _LOGGER.warning("Skipping rule (no tracker_id): " + rule['descr'])
+                _LOGGER.warning("Skipping rule (no tracker_id): " + rule['description'])
             else:
                 if rule_prefix:
-                    if (rule['descr'].startswith(rule_prefix)):
-                        _LOGGER.debug("Found rule %s", rule['descr'])
-                        new_rule = pfSense('pfSense_'+rule['descr'], rule['descr'], tracker, host, api_key, access_token, rule_prefix)
+                    if (rule['description'].startswith(rule_prefix)):
+                        _LOGGER.debug("Found rule %s", rule['description'])
+                        new_rule = opnSense('opnSense_'+rule['description'], rule['description'], tracker, host, api_key, access_token, rule_prefix)
                         rules.append(new_rule)
                 else:
-                    _LOGGER.debug("Found rule %s", rule['descr'])
-                    new_rule = pfSense('pfSense_'+rule['descr'], rule['descr'], tracker, host, api_key, access_token, rule_prefix)
+                    _LOGGER.debug("Found rule %s", rule['description'])
+                    new_rule = opnSense('opnSense_'+rule['description'], rule['description'], tracker, host, api_key, access_token, rule_prefix)
                     rules.append(new_rule)
             i=i+1
 
         # Add devices
         add_entities(rules)
     except Exception as e:
-        _LOGGER.error("Problem getting rule set from pfSense host: %s.  Likely due to API key or secret. More Info:" + str(e), host)
+        _LOGGER.error("Problem getting rule set from opnSense host: %s.  Likely due to API key or secret. More Info:" + str(e), host)
 
-class pfSense(SwitchDevice):
-    """Representation of an pfSense Rule."""
+class opnSense(SwitchDevice):
+    """Representation of an opnSense Rule."""
 
     def __init__(self, name, rule_name, tracker_id, host, api_key, access_token, rule_prefix):
-        _LOGGER.info("Initialized pfSense Rule SWITCH %s", name)
-        """Initialize an pfSense Rule as a switch."""
+        _LOGGER.info("Initialized opnSense Rule SWITCH %s", name)
+        """Initialize an opnSense Rule as a switch."""
         self._name = name
         self._rule_name = rule_name
         self._state = None
@@ -147,7 +147,7 @@ class pfSense(SwitchDevice):
     def update(self):
         """Check the current state of the rule in pfSense"""
         import pprint, sys
-        from PfsenseFauxapi.PfsenseFauxapi import PfsenseFauxapi
+        from pyopnsense import client
 
         if self._rule_prefix:
             if (self._rule_name.startswith(self._rule_prefix)):
@@ -155,59 +155,52 @@ class pfSense(SwitchDevice):
         else:
             self._name = self._rule_name
 
-        _LOGGER.debug("Getting pfSense current rule state for %s", self._rule_name)
+        _LOGGER.debug("Getting opnSense current rule state for %s", self._rule_name)
         try:
             # Setup connection with devices/cloud
-            FauxapiLib = PfsenseFauxapi(self._host, self._api_key, self._access_token, debug=True)
+            apiLib = client.OPNClient(self._api_key, self._access_token,self._host)
 
             # Get the current set of filters
-            filters = FauxapiLib.config_get('filter')
-
-            for rule in filters['rule']:
-                if (rule.get('tracker') == self._tracker_id):
-                    _LOGGER.debug("Found rule with tracker %s, updating state.", self._tracker_id)
-                    if ('disabled' in rule):
-                        self._state = False
-                    else:
-                        self._state = True
+            rule = apiLib._get(f'firewall/filter/getRule/{self._tracker_id}')
+            _LOGGER.debug("Found rule with tracker %s, updating state.", self._tracker_id)
+            if ('1' in rule['rule']['enabled']):
+                self._state = True
+            else:
+                self._state = False
         except:
-            _LOGGER.error("Problem retrieving rule set from pfSense host: %s.  Likely due to API key or secret.", self._host)
+            _LOGGER.error("Problem retrieving rule set from pfSense host: %s.  Likely due to API key or secret, or rule name", self._host)
 
     def set_rule_state(self, action):
         """Setup the pfSense Rules platform."""
         import pprint, sys
-        from PfsenseFauxapi.PfsenseFauxapi import PfsenseFauxapi
+        from pyopnsense import client
 
-        _LOGGER.debug("Connecting to pfSense firewall to change rule states.")
+        _LOGGER.debug("Connecting to opnSense firewall to change rule states.")
         try:
             # Setup connection with devices/cloud
-            FauxapiLib = PfsenseFauxapi(self._host, self._api_key, self._access_token, debug=True)
+            apiLib = client.OPNClient(self._api_key, self._access_token,self._host)
 
             # Get the current set of filters
-            filters = FauxapiLib.config_get('filter')
+            rule = apiLib._get(f'firewall/filter/getRule/{self._tracker_id}')
         except:
             _LOGGER.error("Problem retrieving rule set from pfSense host: %s.  Likely due to API key or secret.", self._host)
 
         i = 0
-        for rule in filters['rule']:
-            if (rule.get('tracker') == self._tracker_id):
-                _LOGGER.info("Found rule changing state rule: %s", self._rule_name)
+        
+        _LOGGER.info("Found rule changing state rule: %s", self._rule_name)
                 if (action == True):
-                    if ('disabled' in rule):
-                        del filters['rule'][i]['disabled']
-                        _LOGGER.debug("Rule %s enabled in config (this has not been pushed back to firewall yet!)", self._rule_name)
+                    if ('0' in rule['rule']['enabled']):
+                        filters = apiLib._post(f'firewall/filter/toggleRule//{self._tracker_id}','')
+                        _LOGGER.debug("Rule %s enabled in config", self._rule_name)
                 elif (action == False):
-                    filters['rule'][i]['disabled'] = ""
-                    _LOGGER.debug("Rule %s disabled in config (this has not been pushed back to firewall yet!)", self._rule_name)
+                     if ('1' in rule['rule']['enabled']):
+                        filters = apiLib._post(f'firewall/filter/toggleRule//{self._tracker_id}','')
+                    _LOGGER.debug("Rule %s disabled in config", self._rule_name)
             i=i+1
 
         try:
             _LOGGER.debug("Sending updated rule set to pfSense firewall")
             # Push the config back to pfSense
-            filters = FauxapiLib.config_set(filters, 'filter')
-
-            _LOGGER.debug("Reloading the config on pfSense firewall to accept rule changes")
-            # Reload the config
-            FauxapiLib.send_event("filter reload")
+            filters = apiLib._post(f'firewall/filter/apply/','')
         except:
-            _LOGGER.error("Problem sending & reloading rule set from pfSense host: %s.  Likely due to API key or secret.", self._host)
+            _LOGGER.error("Problem sending & reloading rule set from opnSense host: %s.  Likely due to API key or secret.", self._host)

@@ -1,6 +1,7 @@
-{  
-    "name": "opnsense-ruleswitch",
-    "domains": ["sensor"],
-    "iot_class": ["Local Polling"],
-    "content_in_root": false
+{
+  "name": "opnsense ruleswitch",
+  "hacs": "1.6.0",
+  "domains": ["switch"],
+  "iot_class": "Local Polling",
+  "homeassistant": "0.118.0"
 }

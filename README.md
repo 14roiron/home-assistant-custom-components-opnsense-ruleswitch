@@ -40,11 +40,9 @@ The rules shown here are the one under the automation tab, not the normal rules.
 
 | Platform        | Description                                                               |
 | --------------- | ------------------------------------------------------------------------- |
-| `binary_sensor` | Show something `True` or `False`.                                         |
-| `sensor`        | Show info from opnsense ruleswitch API. |
-| `switch`        | Switch something `True` or `False`.                                       |
+| `switch`        | Switch firewall rules on or off.                                          |
 
-![example][exampleimg]
+
 
 ## Installation
 

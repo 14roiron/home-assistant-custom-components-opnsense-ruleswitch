@@ -25,11 +25,7 @@ import logging
 import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
 
-try:
-    from homeassistant.components.switch import SwitchEntity as SwitchDevice
-except ImportError:
-    from homeassistant.components.switch import SwitchDevice
-
+from homeassistant.components.switch import SwitchDevice
 from homeassistant.components.switch import  PLATFORM_SCHEMA#(), ENTITY_ID_FORMAT)
 from homeassistant.const import (
     CONF_FRIENDLY_NAME,  CONF_VALUE_TEMPLATE, CONF_HOST, CONF_API_KEY, CONF_ACCESS_TOKEN) #CONF_SWITCHES
@@ -106,9 +102,8 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     except Exception as e:
         _LOGGER.error("Problem getting rule set from opnSense host: %s.  Likely due to API key or secret. More Info:" + str(e), host)
 
-class opnSense(SwitchDevice):
-    """Representation of an opnSense Rule."""
 
+class MySwitch(SwitchDevice):    
     def __init__(self, name, rule_name, tracker_id, host, api_key, access_token, rule_prefix):
         _LOGGER.info("Initialized opnSense Rule SWITCH %s", name)
         """Initialize an opnSense Rule as a switch."""
@@ -120,28 +115,26 @@ class opnSense(SwitchDevice):
         self._access_token = access_token
         self._tracker_id = tracker_id
         self._rule_prefix = rule_prefix
-
-    @property
-    def name(self):
+    @property    
+    def name(self):        
+        """Name of the entity.""" 
         return self._name
-
-    @property
-    def is_on(self):
+    @property    
+    def is_on(self): 
+        """If the switch is currently on or off.""" 
         return self._state
-
-    @property
-    def icon(self):
-        if self._state:
-            return DEFAULT_ICON_ENABLED
-        else:
-            return DEFAULT_ICON_DISABLED
 
     def turn_on(self, **kwargs):
         self.set_rule_state(True)
 
     def turn_off(self, **kwargs):
         self.set_rule_state(False)
-
+    @property
+    def icon(self):
+        if self._state:
+            return DEFAULT_ICON_ENABLED
+        else:
+            return DEFAULT_ICON_DISABLED
     def update(self):
         """Check the current state of the rule in pfSense"""
         #import pprint, sys
@@ -196,9 +189,9 @@ class opnSense(SwitchDevice):
                 _LOGGER.debug("Rule %s disabled in config", self._rule_name)
         i=i+1
 
-        try:
-            _LOGGER.debug("Sending updated rule set to pfSense firewall")
-            # Push the config back to pfSense
-            apiLib._post('firewall/filter/apply/','')
-        except Exception:
-            _LOGGER.error("Problem sending & reloading rule set from opnSense host: %s.  Likely due to API key or secret.", self._host)
+        # try:
+        #     _LOGGER.debug("Sending updated rule set to pfSense firewall")
+        #     # Push the config back to pfSense
+        #     apiLib._post('firewall/filter/apply/','')
+        # except Exception:
+        #     _LOGGER.error("Problem sending & reloading rule set from opnSense host: %s.  Likely due to API key or secret.", self._host)

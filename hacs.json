@@ -1,0 +1,6 @@
+{  
+    "name": "opnsense-ruleswitch",
+    "domains": ["sensor"],
+    "iot_class": ["Local Polling"],
+    "content_in_root": false
+}

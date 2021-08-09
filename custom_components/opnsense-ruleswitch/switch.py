@@ -1,5 +1,5 @@
 """
-Switch Platform support for pfSense firewall rules.
+Switch Platform support for opnSense firewall rules.
 
 For more details please refer to
 https://github.com/dgshue/home-assistant-custom-components
@@ -11,7 +11,7 @@ configuration.yaml
 ---------------------------------------
 
 switch:
-  - platform: pfsense_rule
+  - platform: opnsense_rule
     host: 192.168.1.1
     api_key: PFFA1QDKsakjied21
     access_token: AectmzLxeTS413I6FtLyA3xhFxs3Y80n3bZEu6gzboxd5adUbbrejFZae1u5

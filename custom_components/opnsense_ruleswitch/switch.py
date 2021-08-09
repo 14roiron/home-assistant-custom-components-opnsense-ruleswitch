@@ -103,7 +103,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         _LOGGER.error("Problem getting rule set from opnSense host: %s.  Likely due to API key or secret. More Info:" + str(e), host)
 
 
-class MySwitch(SwitchDevice):    
+class opnSense(SwitchDevice):    
     def __init__(self, name, rule_name, tracker_id, host, api_key, access_token, rule_prefix):
         _LOGGER.info("Initialized opnSense Rule SWITCH %s", name)
         """Initialize an opnSense Rule as a switch."""

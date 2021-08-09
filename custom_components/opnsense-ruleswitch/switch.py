@@ -188,15 +188,15 @@ class opnSense(SwitchDevice):
         i = 0
         
         _LOGGER.info("Found rule changing state rule: %s", self._rule_name)
-                if (action == True):
-                    if ('0' in rule['rule']['enabled']):
-                        filters = apiLib._post(f'firewall/filter/toggleRule//{self._tracker_id}','')
-                        _LOGGER.debug("Rule %s enabled in config", self._rule_name)
-                elif (action == False):
-                     if ('1' in rule['rule']['enabled']):
-                        filters = apiLib._post(f'firewall/filter/toggleRule//{self._tracker_id}','')
-                    _LOGGER.debug("Rule %s disabled in config", self._rule_name)
-            i=i+1
+        if (action == True):
+            if ('0' in rule['rule']['enabled']):
+                filters = apiLib._post(f'firewall/filter/toggleRule//{self._tracker_id}','')
+                _LOGGER.debug("Rule %s enabled in config", self._rule_name)
+        elif (action == False):
+            if ('1' in rule['rule']['enabled']):
+                filters = apiLib._post(f'firewall/filter/toggleRule//{self._tracker_id}','')
+                _LOGGER.debug("Rule %s disabled in config", self._rule_name)
+        i=i+1
 
         try:
             _LOGGER.debug("Sending updated rule set to pfSense firewall")

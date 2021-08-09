@@ -25,7 +25,7 @@ import logging
 import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
 
-from homeassistant.components.switch import SwitchDevice
+from homeassistant.components.switch import SwitchEntity
 from homeassistant.components.switch import  PLATFORM_SCHEMA#(), ENTITY_ID_FORMAT)
 from homeassistant.const import (
     CONF_FRIENDLY_NAME,  CONF_VALUE_TEMPLATE, CONF_HOST, CONF_API_KEY, CONF_ACCESS_TOKEN) #CONF_SWITCHES
@@ -103,7 +103,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         _LOGGER.error("Problem getting rule set from opnSense host: %s.  Likely due to API key or secret. More Info:" + str(e), host)
 
 
-class opnSense(SwitchDevice):    
+class opnSense(SwitchEntity):    
     def __init__(self, name, rule_name, tracker_id, host, api_key, access_token, rule_prefix):
         _LOGGER.info("Initialized opnSense Rule SWITCH %s", name)
         """Initialize an opnSense Rule as a switch."""

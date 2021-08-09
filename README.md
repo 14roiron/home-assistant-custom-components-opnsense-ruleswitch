@@ -1,17 +1,21 @@
-## pfSense Rule Switch Component
+## opnSense Rule Switch Component
 
-This component is written to toggle pfSense firewall rules on (enabled) or off (disabled).  One my question why in the world would someone want to do this from HA. Simply put, I have children that from time to time refuse to clean their rooms and require further motivation on the fly vs on a strict schedule.  However, I'm sure someone else might find a better use case other than messy kids.
+This component is written to toggle opnSense firewall rules on (enabled) or off (disabled).  
+One my question why in the world would someone want to do this from HA. Simply put, I only use it to change the vpn use by my chromecast.
 
+
+FORK from https://github.com/dgshue/home-assistant-custom-components and nagyrobi/home-assistant-custom-components-pfsense-ruleswitch
+Thanks for their work on that.
 ### Pre-Reqs
 
-- pfSense 2.4.x or 2.5.x
-- FauxAPI 1.3+ installed
-  https://github.com/ndejong/pfsense_fauxapi#installation
-- FauxAPI API Key and Secret with appropriate permissions
+- opnsense 21.0+
+- pyopnsense api 0.0.3 installed
+  https://github.com/mtreinish/pyopnsense
+- API Key and Secret with appropriate permissions
 
 ### Installation
 
-- Copy directory `pfsense_rule` to your `<config dir>/custom_components` directory.
+- Copy directory `opnsense_rule` to your `<config dir>/custom_components` directory.
 - Configure with config below.
 - Restart Home-Assistant.
 
@@ -22,7 +26,7 @@ To use this component in your installation, add the following to your `configura
 # Example configuration.yaml entry
 
 switch:
-  - platform: pfsense_rule
+  - platform: opnsense_rule
     host: 192.168.1.1
     api_key: PFFA1QDKsakjied21 -or- !secret fauxapi-key
     access_token: AectmzLxeTS413I6FtLyA3xhFxs3Y80n3bZEu6gzboxd5adUbbrejFZae1u5 -or- !secret fauxapi-secret

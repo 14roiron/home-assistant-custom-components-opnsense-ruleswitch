@@ -22,7 +22,6 @@ switch:
 
 """
 import logging
-import subprocess
 import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
 
@@ -61,7 +60,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     """Initialize the platform"""
 
     """Setup the opnSense Rules platform."""
-    import pprint, sys
+    #import pprint, sys
     from pyopnsense import client
 
     # Assign configuration variables. The configuration check takes care they are
@@ -146,7 +145,7 @@ class opnSense(SwitchDevice):
 
     def update(self):
         """Check the current state of the rule in pfSense"""
-        import pprint, sys
+        #import pprint, sys
         from pyopnsense import client
 
         if self._rule_prefix:
@@ -167,12 +166,12 @@ class opnSense(SwitchDevice):
                 self._state = True
             else:
                 self._state = False
-        except:
+        except Exception as e:
             _LOGGER.error("Problem retrieving rule set from pfSense host: %s.  Likely due to API key or secret, or rule name", self._host)
 
     def set_rule_state(self, action):
         """Setup the pfSense Rules platform."""
-        import pprint, sys
+        #import pprint, sys
         from pyopnsense import client
 
         _LOGGER.debug("Connecting to opnSense firewall to change rule states.")
@@ -182,7 +181,7 @@ class opnSense(SwitchDevice):
 
             # Get the current set of filters
             rule = apiLib._get(f'firewall/filter/getRule/{self._tracker_id}')
-        except:
+        except Exception as e:
             _LOGGER.error("Problem retrieving rule set from pfSense host: %s.  Likely due to API key or secret.", self._host)
 
         i = 0
@@ -202,5 +201,5 @@ class opnSense(SwitchDevice):
             _LOGGER.debug("Sending updated rule set to pfSense firewall")
             # Push the config back to pfSense
             filters = apiLib._post(f'firewall/filter/apply/','')
-        except:
+        except Exception as e:
             _LOGGER.error("Problem sending & reloading rule set from opnSense host: %s.  Likely due to API key or secret.", self._host)

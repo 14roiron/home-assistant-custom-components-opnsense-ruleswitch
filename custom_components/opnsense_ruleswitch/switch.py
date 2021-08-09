@@ -30,10 +30,9 @@ try:
 except ImportError:
     from homeassistant.components.switch import SwitchDevice
 
-from homeassistant.components.switch import (
-        PLATFORM_SCHEMA, ENTITY_ID_FORMAT)
+from homeassistant.components.switch import  PLATFORM_SCHEMA#(), ENTITY_ID_FORMAT)
 from homeassistant.const import (
-    CONF_FRIENDLY_NAME, CONF_SWITCHES, CONF_VALUE_TEMPLATE, CONF_HOST, CONF_API_KEY, CONF_ACCESS_TOKEN)
+    CONF_FRIENDLY_NAME,  CONF_VALUE_TEMPLATE, CONF_HOST, CONF_API_KEY, CONF_ACCESS_TOKEN) #CONF_SWITCHES
 
 CONF_RULE_FILTER = 'rule_filter'
 
@@ -104,7 +103,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
         # Add devices
         add_entities(rules)
-    except Exception as e:
+    except Exception:
         _LOGGER.error("Problem getting rule set from opnSense host: %s.  Likely due to API key or secret. More Info:" + str(e), host)
 
 class opnSense(SwitchDevice):
@@ -166,7 +165,7 @@ class opnSense(SwitchDevice):
                 self._state = True
             else:
                 self._state = False
-        except Exception as e:
+        except Exception:
             _LOGGER.error("Problem retrieving rule set from pfSense host: %s.  Likely due to API key or secret, or rule name", self._host)
 
     def set_rule_state(self, action):
@@ -181,25 +180,25 @@ class opnSense(SwitchDevice):
 
             # Get the current set of filters
             rule = apiLib._get(f'firewall/filter/getRule/{self._tracker_id}')
-        except Exception as e:
+        except Exception:
             _LOGGER.error("Problem retrieving rule set from pfSense host: %s.  Likely due to API key or secret.", self._host)
 
         i = 0
         
         _LOGGER.info("Found rule changing state rule: %s", self._rule_name)
-        if (action == True):
+        if (action):
             if ('0' in rule['rule']['enabled']):
-                filters = apiLib._post(f'firewall/filter/toggleRule//{self._tracker_id}','')
+                apiLib._post(f'firewall/filter/toggleRule//{self._tracker_id}','')
                 _LOGGER.debug("Rule %s enabled in config", self._rule_name)
-        elif (action == False):
+        else:
             if ('1' in rule['rule']['enabled']):
-                filters = apiLib._post(f'firewall/filter/toggleRule//{self._tracker_id}','')
+                apiLib._post(f'firewall/filter/toggleRule//{self._tracker_id}','')
                 _LOGGER.debug("Rule %s disabled in config", self._rule_name)
         i=i+1
 
         try:
             _LOGGER.debug("Sending updated rule set to pfSense firewall")
             # Push the config back to pfSense
-            filters = apiLib._post(f'firewall/filter/apply/','')
-        except Exception as e:
+            apiLib._post('firewall/filter/apply/','')
+        except Exception:
             _LOGGER.error("Problem sending & reloading rule set from opnSense host: %s.  Likely due to API key or secret.", self._host)

@@ -189,9 +189,9 @@ class opnSense(SwitchEntity):
                 _LOGGER.debug("Rule %s disabled in config", self._rule_name)
         i=i+1
 
-        # try:
-        #     _LOGGER.debug("Sending updated rule set to pfSense firewall")
-        #     # Push the config back to pfSense
-        #     apiLib._post('firewall/filter/apply/','')
-        # except Exception:
-        #     _LOGGER.error("Problem sending & reloading rule set from opnSense host: %s.  Likely due to API key or secret.", self._host)
+        try:
+            _LOGGER.debug("Sending updated rule set to pfSense firewall")
+            # Push the config back to pfSense
+            apiLib._post('firewall/filter/apply/','')
+        except Exception:
+            _LOGGER.error("Problem sending & reloading rule set from opnSense host: %s.  Likely due to API key or secret.", self._host)

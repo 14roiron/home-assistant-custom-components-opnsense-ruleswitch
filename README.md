@@ -54,24 +54,15 @@ The rules shown here are the one under the automation tab, not the normal rules.
 6. Restart Home Assistant
 7. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "opnsense ruleswitch"
 
-Using your HA configuration directory (folder) as a starting point you should now also have this:
+The configuration shall be moved to use flow, in the mean time you need to add that to your configuration.yaml
+```
+switch:
+  - platform: opnsense_rule
+    host: https://192.168.1.1/api
+    api_key: PFFA1sdfsdfkjied21
+    access_token: AectmsfdfsdfdsfsfdsfdsdffdsbZEu6gzboxd5adUbbrejFZae1u5
+    rule_filter: HomeAssistant
 
-```text
-custom_components/opnsense_ruleswitch/translations/en.json
-custom_components/opnsense_ruleswitch/translations/fr.json
-custom_components/opnsense_ruleswitch/translations/nb.json
-custom_components/opnsense_ruleswitch/translations/sensor.en.json
-custom_components/opnsense_ruleswitch/translations/sensor.fr.json
-custom_components/opnsense_ruleswitch/translations/sensor.nb.json
-custom_components/opnsense_ruleswitch/translations/sensor.nb.json
-custom_components/opnsense_ruleswitch/__init__.py
-custom_components/opnsense_ruleswitch/api.py
-custom_components/opnsense_ruleswitch/binary_sensor.py
-custom_components/opnsense_ruleswitch/config_flow.py
-custom_components/opnsense_ruleswitch/const.py
-custom_components/opnsense_ruleswitch/manifest.json
-custom_components/opnsense_ruleswitch/sensor.py
-custom_components/opnsense_ruleswitch/switch.py
 ```
 
 ## Configuration is done in the UI
